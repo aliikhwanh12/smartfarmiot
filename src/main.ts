@@ -11,27 +11,14 @@ import App from './App.vue'
 import router from './router'
 import VueApexCharts from 'vue3-apexcharts'
 import 'leaflet/dist/leaflet.css'
-import { initializeApp } from 'firebase/app'
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: 'AIzaSyCTI3qiIRGrnzKc0f6jJXGjL0tMUk9lZNM',
-  authDomain: 'smartfarmiot-28e0f.firebaseapp.com',
-  databaseURL: 'https://smartfarmiot-28e0f-default-rtdb.asia-southeast1.firebasedatabase.app',
-  projectId: 'smartfarmiot-28e0f',
-  storageBucket: 'smartfarmiot-28e0f.firebasestorage.app',
-  messagingSenderId: '1060521794829',
-  appId: '1:1060521794829:web:1ee7d73135aeb26aaea444',
-  measurementId: 'G-7HQ0JEWVZE',
-}
-initializeApp(firebaseConfig)
-
+import Vue3Toastify, { type ToastContainerOptions } from 'vue3-toastify'
+import 'vue3-toastify/dist/index.css'
 const app = createApp(App)
 
 app.use(router)
 app.use(VueApexCharts)
-
+app.use(Vue3Toastify, {
+  autoClose: 3000,
+  position: 'top-right',
+} as ToastContainerOptions)
 app.mount('#app')

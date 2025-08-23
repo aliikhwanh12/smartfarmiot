@@ -10,10 +10,10 @@
               <img class="w-17 h-auto mb-5" src="/images/logo/logo-icon.svg" alt="Logo" />
               <div class="mb-1 sm:mb-1">
                 <p class="mb-1 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                  Welcome Back!
+                  Get Started!
                 </p>
                 <p class="text-gray-500 dark:text-gray-400">
-                  Enter your email and password to sign in!
+                  Enter your name, email, and password to sign up!
                 </p>
               </div>
               <div>
@@ -24,6 +24,24 @@
                 </div>
                 <form @submit.prevent="handleSubmit">
                   <div class="space-y-5">
+                    <!-- Name -->
+                    <div>
+                      <label
+                        for="name"
+                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                      >
+                        Name
+                      </label>
+                      <input
+                        v-model="name"
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your name"
+                        class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-asparagus focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                      />
+                    </div>
+
                     <!-- Email -->
                     <div>
                       <label
@@ -41,22 +59,16 @@
                         class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-asparagus focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                       />
                     </div>
-                    <!-- Password -->
 
+                    <!-- Password -->
                     <div>
-                      <div class="flex items-center justify-between">
-                        <label
-                          for="password"
-                          class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-                        >
-                          Password
-                        </label>
-                        <router-link
-                          to="/reset-password"
-                          class="mb-1.5 text-sm text-asparagus hover:text-yellowgreen dark:text-yellowgreen"
-                          >Forgot?</router-link
-                        >
-                      </div>
+                      <label
+                        for="password"
+                        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                      >
+                        Password
+                      </label>
+
                       <div class="relative">
                         <input
                           v-model="password"
@@ -108,21 +120,29 @@
                     <!-- Button -->
                     <div>
                       <button
+                        v-if="isLoading"
+                        type="button"
+                        class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-md bg-asparagus shadow-theme-xs hover:bg-yellowgreen"
+                      >
+                        Loading...
+                      </button>
+                      <button
+                        v-else
                         type="submit"
                         class="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-md bg-asparagus shadow-theme-xs hover:bg-yellowgreen"
                       >
-                        Sign In
+                        <span>Sign Up</span>
                       </button>
                     </div>
                   </div>
                 </form>
                 <div class="mt-5">
                   <p class="text-sm font-normal text-center text-gray-700 dark:text-gray-400">
-                    Don't have an account?
+                    Already have an account?
                     <router-link
-                      to="/signup"
+                      to="/login"
                       class="text-asparagus hover:text-yellowgreen dark:text-yellowgreen"
-                      >Sign Up</router-link
+                      >Sign In</router-link
                     >
                   </p>
                 </div>
@@ -146,16 +166,17 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-// import CommonGridShape from '@/components/common/CommonGridShape.vue'
+import { fs } from '@/firebaseConfig' // pakai alias @ jika sudah di-setup, atau relatif path
 import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
-
-import { signInWithEmailAndPassword } from 'firebase/auth'
-import { useRouter } from 'vue-router'
-import { auth } from '@/firebaseConfig'
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { toast } from 'vue3-toastify'
+import { useRouter } from 'vue-router'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { FirebaseError } from 'firebase/app'
+const isLoading = ref(false)
 const email = ref('')
 const password = ref('')
+const name = ref('')
 const showPassword = ref(false)
 const router = useRouter()
 
@@ -163,27 +184,36 @@ const togglePasswordVisibility = () => {
   showPassword.value = !showPassword.value
 }
 
-const handleSubmit = () => {
-  // Handle form submission
-  if (email.value && password.value) {
-    signInWithEmailAndPassword(auth, email.value, password.value)
-      .then(() => {
-        router.push('/')
-      })
-      .catch((error) => {
-        const e = error as FirebaseError
-        console.log('DEBUG ERROR:', e.code, e.message) // cek kodenya
-        if (e.code === 'auth/user-not-found') {
-          toast.error('User tidak ditemukan')
-        } else if (e.code === 'auth/invalid-credential') {
-          toast.error('Email atau Password salah')
-        } else {
-          toast.error('Terjadi kesalahan saat login')
-        }
-        password.value = ''
-      })
-  } else {
-    toast.error('Email dan Password tidak boleh kosong')
+const handleSubmit = async () => {
+  if (isLoading.value) return // cegah klik ganda
+  isLoading.value = true
+  const auth = getAuth()
+  try {
+    const data = await createUserWithEmailAndPassword(auth, email.value, password.value)
+    console.log('Successfully registered!')
+    console.log(auth.currentUser)
+
+    const uid = data.user.uid // pastikan pakai data.user.uid
+    await setDoc(doc(fs, 'users', uid), {
+      name: name.value,
+      email: email.value,
+      role: 'user',
+      created_at: serverTimestamp(),
+      threshold_mode: 'manual',
+    })
+
+    router.push('/')
+  } catch (error: unknown) {
+    const e = error as FirebaseError
+    console.log('DEBUG ERROR:', e.code, e.message) // cek kodenya
+    if (e.code == 'auth/email-already-in-use') {
+      toast.error('Email telah terdaftar')
+    } else if (e.code == 'auth/weak-password') {
+      toast.error('Kata sandi minimal 6 karakter')
+    } else {
+      toast.error(e.code)
+    }
+    isLoading.value = false
   }
 }
 </script>

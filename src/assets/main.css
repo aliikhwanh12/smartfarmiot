@@ -98,7 +98,7 @@ layer(base);
   --text-title-lg--line-height: 60px;
   --text-title-md: 36px;
   --text-title-md--line-height: 44px;
-  --text-title-sm: 30px;
+  --text-title-sm: 25px;
   --text-title-sm--line-height: 38px;
   --text-theme-xl: 20px;
   --text-theme-xl--line-height: 30px;
@@ -899,7 +899,24 @@ span.flatpickr-weekday,
 .edit-button {
   @apply flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto;
 }
+.animated-background {
+  background-size: 400%;
 
+  -webkit-animation: animation 5s ease infinite;
+  -moz-animation: animation 5s ease infinite;
+  animation: animation 5s ease infinite;
+}
+
+@keyframes animation {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

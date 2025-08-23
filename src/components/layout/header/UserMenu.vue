@@ -44,7 +44,7 @@
       </ul>
       <router-link
         to="/signin"
-        @click="signOut"
+        @click="logOut"
         class="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
       >
         <LogoutIcon
@@ -57,13 +57,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon } from '@/icons'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
+import { signOut } from 'firebase/auth'
+import { useRouter } from 'vue-router'
+import { auth } from '@/firebaseConfig'
 
 const dropdownOpen = ref(false)
 const dropdownRef = ref(null)
+const router = useRouter()
 
 const menuItems = [
   { href: '/profile', icon: UserCircleIcon, text: 'Edit profile' },
@@ -79,9 +83,12 @@ const closeDropdown = () => {
   dropdownOpen.value = false
 }
 
-const signOut = () => {
+const logOut = () => {
   // Implement sign out logic here
   console.log('Signing out...')
+  signOut(auth).then(() => {
+    router.push('/')
+  })
   closeDropdown()
 }
 
