@@ -22,6 +22,7 @@ import Salinity from './Salinity.vue'
 import Light from './Light.vue'
 import Configuration from './Configuration.vue'
 import History from './History.vue'
+import Save from './Save.vue'
 export {
   BellIcon,
   LayoutDashboardIcon,
@@ -47,4 +48,5 @@ export {
   History,
   Fertility,
   Sunny,
+  Save,
 }

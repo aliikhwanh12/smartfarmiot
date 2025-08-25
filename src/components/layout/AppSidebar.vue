@@ -172,19 +172,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import {
-  GridIcon,
-  UserCircleIcon,
-  ChevronDownIcon,
-  HorizontalDots,
-  Configuration,
-  History,
-} from '../../icons'
-import SidebarWidget from './SidebarWidget.vue'
-import BoxCubeIcon from '@/icons/BoxCubeIcon.vue'
+import { GridIcon, ChevronDownIcon, HorizontalDots, Configuration, History } from '../../icons'
 import { useSidebar } from '@/composables/useSidebar'
 
 const route = useRoute()
@@ -209,11 +200,6 @@ const menuGroups = [
         icon: Configuration,
         name: 'Konfigurasi',
         path: '/konfigurasi',
-      },
-      {
-        icon: UserCircleIcon,
-        name: 'Profil',
-        path: '/profil',
       },
     ],
   },

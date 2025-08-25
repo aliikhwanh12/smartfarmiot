@@ -185,6 +185,9 @@
                   <TableCell>{{ row.air_temp }}°C</TableCell>
                   <TableCell>{{ row.humidity }}%</TableCell>
                   <TableCell>{{ row.light_intensity }} lx</TableCell>
+                  <TableCell>
+                    {{ getRankBadge(row.fertility_rank) }}
+                  </TableCell>
                 </TableRow>
               </template>
               <template v-else>
@@ -235,6 +238,8 @@ import {
 import { createMonth, toDate } from 'reka-ui/date'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import PageBreadcrumb from '@/components/common/PageBreadcrumb.vue'
+import { useAuthStore } from '@/stores/auth'
+const auth = useAuthStore()
 const currentPageTitle = ref('Riwayat')
 const sensorData = ref([])
 const isLoading = ref(false)
@@ -255,11 +260,27 @@ const formatter = useDateFormatter(locale.value)
 const placeholder = ref(value.value.start)
 const secondMonthPlaceholder = ref(value.value.end)
 
+const getRankBadge = (rank) => {
+  switch (rank) {
+    case 1:
+      return 'Sangat Subur'
+    case 2:
+      return 'Subur'
+    case 3:
+      return 'Kurang Subur'
+    case 4:
+      return 'Tidak Subur'
+
+    default:
+      return '-'
+  }
+}
+
 const fetchData = async () => {
   isLoading.value = true
   try {
     const res = await fetch(
-      'https://getsensordatahistory-k5f26jngsa-et.a.run.app/?user_id=unknown_user',
+      'https://getsensordatahistory-k5f26jngsa-et.a.run.app/?device_id=' + auth.user?.device_id,
       {
         method: 'POST',
         headers: {
@@ -295,7 +316,7 @@ const fetchMoreData = async () => {
   isLoading.value = true
   try {
     const res = await fetch(
-      `https://getsensordatahistory-k5f26jngsa-et.a.run.app/?user_id=unknown_user`,
+      `https://getsensordatahistory-k5f26jngsa-et.a.run.app/?device_id=` + auth.user?.device_id,
       {
         method: 'POST',
         headers: {
@@ -401,6 +422,7 @@ const columns = [
   { id: 'air_temp', label: 'Air Temp' },
   { id: 'humidity', label: 'Humidity' },
   { id: 'light_intensity', label: 'Light' },
+  { id: 'fertility_rank', label: 'Kesuburan' },
 ]
 
 const filteredRows = computed(() => {

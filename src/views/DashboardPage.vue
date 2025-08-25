@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import AdminLayout from '../components/layout/AdminLayout.vue'
 import SensorMetrics from '../components/dashboard/SensorMetrics.vue'
 import FertilityCard from '../components/dashboard/FertilityCard.vue'
@@ -7,7 +7,7 @@ import CustomerDemographic from '../components/dashboard/CustomerDemographic.vue
 import StatisticsChart from '../components/dashboard/StatisticsChart.vue'
 import { getDatabase, ref as dbref, onValue } from 'firebase/database'
 import { ref, computed, onMounted } from 'vue'
-
+import { useAuthStore } from '@/stores/auth'
 import {
   AirTemp,
   AirHumi,
@@ -22,6 +22,13 @@ import {
   History,
 } from '../icons'
 import { markRaw, reactive } from 'vue'
+
+const fertilityData = ref<{
+  fertility_rank: string
+  timestamp: string
+  recommendation: string
+} | null>(null)
+const auth = useAuthStore()
 const timestampp = ref(null)
 const formattedTime = computed(() => {
   return timestampp.value
@@ -46,7 +53,7 @@ const grafik = reactive({
 const fetchChartData = async () => {
   try {
     const res = await fetch(
-      'https://getchartdata-19576946914.asia-southeast2.run.app?user_id=unknown_user',
+      'https://getchartdata-19576946914.asia-southeast2.run.app?device_id=' + auth.user?.device_id,
     )
     const data = await res.json()
 
@@ -150,9 +157,12 @@ const sensors = reactive([
   },
 ])
 
-onMounted(() => {
+onMounted(async () => {
   const db = getDatabase()
-  const dbbref = dbref(db, 'users/unknown_user/devices/SM5c264cda3bd8PL/current_data')
+  const dbbref = dbref(
+    db,
+    'users/' + auth.user?.uid + '/devices/' + auth.user?.device_id + '/current_data',
+  )
 
   onValue(dbbref, (snapshot) => {
     const data = snapshot.val()
@@ -166,6 +176,15 @@ onMounted(() => {
     }
   })
   fetchChartData()
+  try {
+    const res = await fetch(
+      'https://aiprediction-19576946914.asia-southeast2.run.app?device_id=' + auth.user?.device_id,
+    )
+    const fertility = await res.json()
+    fertilityData.value = fertility.data
+  } catch (err) {
+    console.error(err)
+  }
 })
 </script>
 
@@ -201,7 +220,7 @@ onMounted(() => {
         <div class="grid grid-cols-1 gap-4 md:gap-6">
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
             <weather-card />
-            <fertility-card status="Optimal" />
+            <fertility-card :data="fertilityData" />
           </div>
 
           <statistics-chart :series="grafik" />

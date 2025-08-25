@@ -29,15 +29,6 @@ const router = createRouter({
       },
     },
     {
-      path: '/profil',
-      name: 'Profil',
-      component: () => import('../views/ProfilPage.vue'),
-      meta: {
-        title: 'Profil',
-        requiresAuth: true,
-      },
-    },
-    {
       path: '/riwayat',
       name: 'Riwayat',
       component: () => import('../views/RiwayatPage.vue'),
