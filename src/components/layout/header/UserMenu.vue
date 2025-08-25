@@ -1,3 +1,6 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <template>
   <div class="relative" ref="dropdownRef">
     <button
@@ -45,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon } from '@/icons'
+import { ChevronDownIcon, LogoutIcon } from '@/icons'
 import { RouterLink } from 'vue-router'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { signOut } from 'firebase/auth'
@@ -62,14 +65,8 @@ function getTwoWords(text: string): string {
   return words.slice(0, 2).join(' ')
 }
 const dropdownOpen = ref(false)
-const dropdownRef = ref(null)
+const dropdownRef = ref<HTMLElement | null>(null)
 const router = useRouter()
-
-const menuItems = [
-  { href: '/profile', icon: UserCircleIcon, text: 'Edit profile' },
-  { href: '/chat', icon: SettingsIcon, text: 'Account settings' },
-  { href: '/profile', icon: InfoCircleIcon, text: 'Support' },
-]
 
 const toggleDropdown = () => {
   dropdownOpen.value = !dropdownOpen.value
@@ -88,7 +85,8 @@ const logOut = () => {
   closeDropdown()
 }
 
-const handleClickOutside = (event) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleClickOutside = (event: { target: any }) => {
   if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
     closeDropdown()
   }

@@ -108,7 +108,7 @@ const handleLogout = () => {
 
         <!-- Input OTP -->
         <div class="flex justify-center">
-          <PinInput otp type="number" id="pin-input" v-model="pinValue" placeholder="">
+          <PinInput otp type="text" id="pin-input" v-model="pinValue" placeholder="">
             <PinInputGroup class="gap-3">
               <PinInputSlot
                 v-for="(_, index) in 6"
