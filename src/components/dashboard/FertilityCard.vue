@@ -13,26 +13,27 @@ defineProps<{
 }>()
 
 const getRankBadge = (rank: string) => {
-  switch (rank) {
-    case '1':
-      return { label: 'Sangat Subur', variant: '-brand-500' }
-    case '2':
-      return { label: 'Subur', variant: '-asparagus' }
-    case '3':
-      return { label: 'Kurang Subur', variant: '-warning-500' }
-    case '4':
-      return { label: 'Tidak Subur', variant: '-error-500' }
+  const ranking = Number(rank)
+  switch (ranking) {
+    case 1:
+      return { label: 'Sangat Subur', variant: 'bg-brand-500' }
+    case 2:
+      return { label: 'Subur', variant: 'bg-asparagus' }
+    case 3:
+      return { label: 'Kurang Subur', variant: 'bg-warning-500' }
+    case 4:
+      return { label: 'Tidak Subur', variant: 'bg-error-500' }
 
     default:
-      return { label: '-', variant: '-error-500' }
+      return { label: '-', variant: 'bg-error-500' }
   }
 }
 </script>
 <template>
   <div
     :class="[
-      `rounded-2xl border p-5 flex flex-col justify-center items-center text-center text-white dark:border-gray-800 dark:bg-white/[0.03] md:p-6`,
-      `bg${getRankBadge(data?.fertility_rank || '99').variant}`,
+      'rounded-2xl border p-5 flex flex-col justify-center items-center text-center text-white dark:border-gray-800 dark:bg-white/[0.03] md:p-6',
+      getRankBadge(data?.fertility_rank || '99').variant,
     ]"
   >
     <component :is="Fertility" class="w-6 h-6 fill-current text-white text-5xl mb-2" />

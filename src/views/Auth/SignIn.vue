@@ -51,11 +51,11 @@
                         >
                           Password
                         </label>
-                        <router-link
+                        <!-- <router-link
                           to="/reset-password"
                           class="mb-1.5 text-sm text-asparagus hover:text-yellowgreen dark:text-yellowgreen"
                           >Forgot?</router-link
-                        >
+                        > -->
                       </div>
                       <div class="relative">
                         <input
