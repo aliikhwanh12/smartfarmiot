@@ -8,14 +8,14 @@ import { getFirestore } from 'firebase/firestore'
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: 'AIzaSyCTI3qiIRGrnzKc0f6jJXGjL0tMUk9lZNM',
-  authDomain: 'smartfarmiot-28e0f.firebaseapp.com',
-  databaseURL: 'https://smartfarmiot-28e0f-default-rtdb.asia-southeast1.firebasedatabase.app',
-  projectId: 'smartfarmiot-28e0f',
-  storageBucket: 'smartfarmiot-28e0f.firebasestorage.app',
-  messagingSenderId: '1060521794829',
-  appId: '1:1060521794829:web:1ee7d73135aeb26aaea444',
-  measurementId: 'G-7HQ0JEWVZE',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 }
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig)

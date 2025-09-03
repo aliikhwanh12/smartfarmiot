@@ -53,7 +53,7 @@ const grafik = reactive({
 const fetchChartData = async () => {
   try {
     const res = await fetch(
-      'https://getchartdata-19576946914.asia-southeast2.run.app?device_id=' + auth.user?.device_id,
+      `${import.meta.env.VITE_CHART_API_URL}?device_id=` + auth.user?.device_id,
     )
     const data = await res.json()
 
@@ -68,7 +68,7 @@ const sensors = reactive([
   {
     key: 'air_temp',
     name: 'Suhu Udara',
-    value: 28,
+    value: 0,
     unit: '°C',
     icon: markRaw(AirTemp),
     min: 20,
@@ -77,7 +77,7 @@ const sensors = reactive([
   {
     key: 'humidity',
     name: 'Kelembapan',
-    value: 60,
+    value: 0,
     unit: '%',
     icon: markRaw(AirHumi),
     min: 40,
@@ -86,7 +86,7 @@ const sensors = reactive([
   {
     key: 'light_intensity',
     name: 'Sinar UV',
-    value: 5.6,
+    value: 0,
     unit: 'UV Index',
     icon: markRaw(Light),
     min: 0,
@@ -95,7 +95,7 @@ const sensors = reactive([
   {
     key: 'moisture',
     name: 'Basah Tanah',
-    value: 45,
+    value: 0,
     unit: '%',
     icon: markRaw(SoilHumi),
     min: 30,
@@ -104,7 +104,7 @@ const sensors = reactive([
   {
     key: 'soil_temp',
     name: 'Suhu Tanah',
-    value: 26,
+    value: 0,
     unit: '°C',
     icon: markRaw(SoilTemp),
     min: 20,
@@ -113,7 +113,7 @@ const sensors = reactive([
   {
     key: 'ph_value',
     name: 'pH Tanah',
-    value: 6.8,
+    value: 0,
     unit: 'pH',
     icon: markRaw(SoilpH),
     min: 5.5,
@@ -122,7 +122,7 @@ const sensors = reactive([
   {
     key: 'ec_value',
     name: 'Salinitas',
-    value: 1.2,
+    value: 0,
     unit: 'mS/cm',
     icon: markRaw(Salinity),
     min: 0.5,
@@ -131,7 +131,7 @@ const sensors = reactive([
   {
     key: 'N_value',
     name: 'Nilai N',
-    value: 300,
+    value: 0,
     unit: 'mg/kg',
     icon: markRaw(SoilN),
     min: 250,
@@ -140,7 +140,7 @@ const sensors = reactive([
   {
     key: 'P_value',
     name: 'Nilai P',
-    value: 25,
+    value: 0,
     unit: 'mg/kg',
     icon: markRaw(SoilP),
     min: 15,
@@ -149,7 +149,7 @@ const sensors = reactive([
   {
     key: 'K_value',
     name: 'Nilai K',
-    value: 210,
+    value: 0,
     unit: 'mg/kg',
     icon: markRaw(SoilK),
     min: 150,
@@ -178,7 +178,7 @@ onMounted(async () => {
   fetchChartData()
   try {
     const res = await fetch(
-      'https://aiprediction-19576946914.asia-southeast2.run.app?device_id=' + auth.user?.device_id,
+      `${import.meta.env.VITE_AI_PREDICTION_API_URL}?device_id=` + auth.user?.device_id,
     )
     const fertility = await res.json()
     fertilityData.value = fertility.data
@@ -186,6 +186,7 @@ onMounted(async () => {
     console.error(err)
   }
 })
+console.log(import.meta.env.VITE_APP_TEST)
 </script>
 
 <template>

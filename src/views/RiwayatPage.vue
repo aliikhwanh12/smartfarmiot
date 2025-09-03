@@ -280,7 +280,7 @@ const fetchData = async () => {
   isLoading.value = true
   try {
     const res = await fetch(
-      'https://getsensordatahistory-k5f26jngsa-et.a.run.app/?device_id=' + auth.user?.device_id,
+      `${import.meta.env.VITE_HISTORY_API_URL}?device_id=` + auth.user?.device_id,
       {
         method: 'POST',
         headers: {
